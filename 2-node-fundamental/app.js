@@ -4,7 +4,7 @@ const fs = require('fs');
 const _ = require('lodash');
 const yargs = require('yargs');
 
-const nodes = require('./nodes');
+const nodes = require('./notes');
 
 const argv = yargs.argv;
 
@@ -14,13 +14,32 @@ console.log('Process:', process.argv);
 console.log('Yargs:',argv);
 
 if (command === 'add') {
-  nodes.addNote(argv.title, argv.body);
+  var note = nodes.addNote(argv.title, argv.body);
+
+  if (note) {
+    console.log("Note created");
+    nodes.logNotes(note);
+  } else {
+    console.log("Note title taken");
+  }
+
 } else if (command === 'list') {
   nodes.getAll();
+
 } else if (command === 'read') {
-  nodes.getNote(argv.title);
+  var note = nodes.getNote(argv.title);
+  if (note) {
+    console.log("Note found");
+    nodes.logNotes(note);
+  } else {
+    console.log("Note not found");
+  }
+
 } else if (command === 'remove') {
-  nodes.removeNote(argv.title);
+  var noteRemoved = nodes.removeNote(argv.title);
+  var message = noteRemoved ? "Note was removed"  : "Note not found";
+  console.log(message);
+
 } else {
   console.log("command not recogined");
 }
